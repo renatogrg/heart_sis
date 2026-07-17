@@ -57,7 +57,16 @@ musicBtn.addEventListener('click', () => {
   musicIcon.textContent = playing ? '⏸' : '▶';
   playing ? bgAudio.play() : bgAudio.pause();
 });
+
+function dockMusicBtn(){
+  const textBlockRect = document.querySelector('.text-block').getBoundingClientRect();
+  const groundRect = document.querySelector('.ground-line').getBoundingClientRect();
+  const distFromTextBlockBottom = textBlockRect.bottom - groundRect.top;
+  musicBtn.style.bottom = (distFromTextBlockBottom + 3) + 'px';
+}
 </script>
+
+
 
 <canvas id="bgHearts"></canvas>
 
@@ -84,6 +93,9 @@ function typeWriter(){
     msgEl.textContent = fullText.slice(0, i);
     i++;
     setTimeout(typeWriter, 35);
+  } else {
+    musicBtn.classList.add('docked');
+    dockMusicBtn();
   }
 }
 typeWriter();
@@ -301,6 +313,7 @@ let resizeRAF = null;
 const treeResizeObserver = new ResizeObserver(() => {
   if(resizeRAF) cancelAnimationFrame(resizeRAF);
   resizeRAF = requestAnimationFrame(resizeTreeCanvas);
+  if(musicBtn.classList.contains('docked')) dockMusicBtn();
 });
 treeResizeObserver.observe(cardEl);
 
@@ -470,7 +483,10 @@ body{
 .music-btn:hover{
   background: rgba(224, 22, 63, 0.2);
 }
-
+.music-btn.docked{
+  position:absolute;
+  left:0;
+}
 
 </style>
 
